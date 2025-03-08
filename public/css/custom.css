@@ -1,0 +1,75 @@
+:root {
+  --bs-primary: #6222CC;   /* Mor */
+  --bs-primary-light: #7D3CFF; /* Açık Mor */
+  --bs-secondary: #FBA504; /* Turuncu */
+  --bs-secondary-light: #FFC766; /* Açık Turuncu */
+}
+
+.navbar {
+  background: linear-gradient(135deg, var(--bs-primary), var(--bs-primary-light));
+  padding: 12px 20px;
+  border-bottom: 3px solid var(--bs-secondary);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .nav-link {
+  color: white !important;
+  font-weight: 500;
+  transition: color 0.3s ease-in-out;
+}
+
+.navbar .nav-link:hover {
+  color: var(--bs-secondary-light) !important;
+}
+
+/* Butonlar */
+.btn-primary {
+  background: linear-gradient(135deg, var(--bs-primary), var(--bs-primary-light));
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--bs-primary-light), var(--bs-primary));
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-outline-primary {
+  color: var(--bs-primary);
+  border: 2px solid var(--bs-primary);
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--bs-primary);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  background: linear-gradient(135deg, var(--bs-secondary), var(--bs-secondary-light));
+  border: none;
+  color: white;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(135deg, var(--bs-secondary-light), var(--bs-secondary));
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
