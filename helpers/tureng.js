@@ -73,6 +73,7 @@ async function getCommonUsages(word) {
 					?.textContent?.trim();
 				const isCommonUsage = category === 'Yaygın Kullanım';
 				const isGeneral = category === 'Genel';
+				const isIregular = category === 'Irregular Verb';
 
 				let englishText =
 					row.querySelector('td.en.tm a')?.textContent?.trim() || '';
@@ -92,6 +93,8 @@ async function getCommonUsages(word) {
 				if (isCommonUsage && !commonUsage) {
 					commonUsage = entry;
 				} else if (isGeneral && !firstGeneralUsage) {
+					firstGeneralUsage = entry;
+				} else if (isIregular && !firstGeneralUsage) {
 					firstGeneralUsage = entry;
 				}
 			});
