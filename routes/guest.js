@@ -1,5 +1,6 @@
 const express = require('express');
 const { getCommonUsages } = require('../helpers/tureng'); // tureng.js dosyasını dahil et
+const { getFirstExampleSentence } = require('../helpers/turengExample');
 const { getTTS } = require('../helpers/audio'); // audio.js dosyasını dahil et
 
 const router = express.Router();
@@ -23,9 +24,18 @@ router.post('/', async (req, res) => {
 		const ttsBase64 = await getTTS(word); // Ses verisini Base64 formatında al
 
 		// EJS şablonuna yaygın kullanım ve ses verisini gönder
+		const sentence = await getFirstExampleSentence(word);
+
+		// Eğer API'den veri gelmezse varsayılan bir değer ata
+		const example =
+			sentence && sentence.success
+				? sentence.example
+				: { english: 'Veri bulunamadı', turkish: 'Veri bulunamadı' };
+
 		res.render('index', {
-			commonUsages: result, // Yaygın kullanımlar
-			audio: ttsBase64, // Base64 formatındaki ses verisi
+			commonUsages: result,
+			example: example, // Doğru değişken ismiyle gönder
+			audio: ttsBase64,
 		});
 	} catch (error) {
 		console.error('Hata:', error);
