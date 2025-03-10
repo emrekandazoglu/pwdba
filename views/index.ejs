@@ -185,9 +185,8 @@
 			</div>
 		</div>
 		<!-- /hero -->
-		<!-- Kelime Öğrenme Sistemi -->
+		<!-- views/index.ejs -->
 		<div class="container py-5">
-			<!-- Başlık -->
 			<div class="text-center mb-4">
 				<h1 class="display-4 fw-bold">Kelime Öğrenme Sistemi</h1>
 			</div>
@@ -203,18 +202,14 @@
 								id="wordInput"
 								placeholder="Kelime girin..."
 								name="wordInput"
-								input
-								field
-								name
-								eklenmeli
 							/>
-
-							<button class="btn btn-success" id="submitBtn">
+							<button class="btn btn-success" id="submitBtn" type="submit">
 								<i class="bi bi-check-lg fs-3"></i>
 							</button>
 						</div>
 					</form>
-					<!-- Kelimeler Tablosu -->
+
+					<!-- Kelime Bilgilerini Göster -->
 					<div class="table-container">
 						<table class="table table-bordered">
 							<thead>
@@ -236,9 +231,18 @@
 									<td>It's important to learn new things every day.</td>
 									<td>Her gün yeni şeyler öğrenmek önemlidir.</td>
 									<td>
-										<button class="btn btn-outline-dark">
+										<!-- Sesli telaffuz butonu -->
+										<button class="btn btn-outline-dark" onclick="playAudio()">
 											<i class="bi bi-volume-up fs-4"></i>
 										</button>
+										<!-- Sesli telaffuzu oynatmak için Base64 formatında ses dosyasını kullan -->
+										<audio controls style="display: none">
+											<source
+												src="data:audio/mp3;base64,<%= audio %>"
+												type="audio/mp3"
+											/>
+											Your browser does not support the audio element.
+										</audio>
 									</td>
 								</tr>
 								<% } else { %>
@@ -252,8 +256,6 @@
 				</div>
 			</div>
 		</div>
-		<!-- /kelime öğrenme sistemi -->
-
 		<!-- testimonials -->
 		<div class="container py-5">
 			<div class="text-center mb-4">
@@ -454,6 +456,13 @@
 		</footer>
 
 		<!-- Footer -->
+
+		<script>
+			function playAudio() {
+				const audioElement = document.querySelector('audio');
+				audioElement.play();
+			}
+		</script>
 
 		<script
 			defer
