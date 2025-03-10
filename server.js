@@ -14,6 +14,8 @@ app.use(express.json()); // JSON verileri alabilmek için
 // Routers
 const guestRouter = require('./routes/guest');
 app.use('/', guestRouter);
+const userRouter = require('./routes/user');
+app.use('/user', userRouter);
 
 app.listen(3000, () => {
 	console.log('Server is running on port 3000');
