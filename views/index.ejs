@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Anasayfa</title>
+		<title>Bootstrap demo</title>
 
 		<link
 			rel="stylesheet"
@@ -45,6 +45,23 @@
 				}
 				100% {
 					transform: translateY(0);
+				}
+			}
+
+			/* Küçük ekranlarda yazı ve butonları küçültme */
+			@media (max-width: 576px) {
+				.table th,
+				.table td {
+					font-size: 0.7rem; /* Yazı boyutunu küçültme */
+					padding: 0.5rem; /* Hücre içi padding küçültme */
+				}
+
+				.table button {
+					font-size: 0.7rem; /* Buton boyutunu küçültme */
+				}
+
+				.bi-volume-up {
+					font-size: 1.1rem; /* İkon boyutunu küçültme */
 				}
 			}
 		</style>
@@ -232,7 +249,11 @@
 									<td>Her gün yeni şeyler öğrenmek önemlidir.</td>
 									<td>
 										<!-- Sesli telaffuz butonu -->
-										<button class="btn btn-outline-dark" onclick="playAudio()">
+										<button
+											class="btn btn-outline-dark btn-sm"
+											onclick="playAudio()"
+										>
+											<!-- buton küçültüldü -->
 											<i class="bi bi-volume-up fs-4"></i>
 										</button>
 										<!-- Sesli telaffuzu oynatmak için Base64 formatında ses dosyasını kullan -->
@@ -256,6 +277,7 @@
 				</div>
 			</div>
 		</div>
+
 		<!-- testimonials -->
 		<div class="container py-5">
 			<div class="text-center mb-4">
