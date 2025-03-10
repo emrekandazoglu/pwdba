@@ -76,13 +76,13 @@
 						class="d-none d-lg-flex navbar-nav mx-auto my-3 my-lg-0 position-absolute top-50 start-50 translate-middle"
 					>
 						<li class="nav-item me-4">
-							<a class="nav-link" href="#">About</a>
+							<a class="nav-link" href="#">Kelimelerim</a>
 						</li>
 						<li class="nav-item me-4">
-							<a class="nav-link" href="#">Services</a>
+							<a class="nav-link" href="#">Hızlı Ekle</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="#">Testimonials</a>
+							<a class="nav-link" href="#">Kendin Ekle</a>
 						</li>
 					</ul>
 					<ul class="navbar-nav my-3 my-lg-0 d-lg-none">
@@ -185,7 +185,6 @@
 			</div>
 		</div>
 		<!-- /hero -->
-
 		<!-- Kelime Öğrenme Sistemi -->
 		<div class="container py-5">
 			<!-- Başlık -->
@@ -196,18 +195,25 @@
 			<div class="row justify-content-center">
 				<div class="col-lg-8">
 					<!-- Kelime Giriş Formu -->
-					<div class="input-group mb-4">
-						<input
-							type="text"
-							class="form-control w-auto"
-							id="wordInput"
-							placeholder="Kelime girin..."
-						/>
-						<button class="btn btn-success" id="submitBtn">
-							<i class="bi bi-check-lg fs-3"></i>
-						</button>
-					</div>
+					<form action="/" method="post">
+						<div class="input-group mb-4">
+							<input
+								type="text"
+								class="form-control w-auto"
+								id="wordInput"
+								placeholder="Kelime girin..."
+								name="wordInput"
+								input
+								field
+								name
+								eklenmeli
+							/>
 
+							<button class="btn btn-success" id="submitBtn">
+								<i class="bi bi-check-lg fs-3"></i>
+							</button>
+						</div>
+					</form>
 					<!-- Kelimeler Tablosu -->
 					<div class="table-container">
 						<table class="table table-bordered">
@@ -215,16 +221,18 @@
 								<tr>
 									<th scope="col">Kelime</th>
 									<th scope="col">Türkçe</th>
+									<th scope="col">Tipi</th>
 									<th scope="col">Örnek Cümle</th>
 									<th scope="col">Örnek Cümle Türkçe</th>
 									<th scope="col">Telaffuz</th>
 								</tr>
 							</thead>
 							<tbody id="wordTableBody">
-								<!-- Örnek Satır -->
+								<% if (commonUsages && commonUsages.success) { %>
 								<tr>
-									<td>Learn</td>
-									<td>Öğrenmek</td>
+									<td><%= commonUsages.data.english %></td>
+									<td><%= commonUsages.data.turkish %></td>
+									<td><%= commonUsages.data.type %></td>
 									<td>It's important to learn new things every day.</td>
 									<td>Her gün yeni şeyler öğrenmek önemlidir.</td>
 									<td>
@@ -233,20 +241,11 @@
 										</button>
 									</td>
 								</tr>
+								<% } else { %>
 								<tr>
-									<td>Study</td>
-									<td>Çalışmak</td>
-									<td>I study English every day to improve my skills.</td>
-									<td>
-										Beceri seviyemi geliştirmek için her gün İngilizce
-										çalışıyorum.
-									</td>
-									<td>
-										<button class="btn btn-outline-dark">
-											<i class="bi bi-volume-up fs-4"></i>
-										</button>
-									</td>
+									<td colspan="6" class="text-center">Kelime bulunamadı.</td>
 								</tr>
+								<% } %>
 							</tbody>
 						</table>
 					</div>
