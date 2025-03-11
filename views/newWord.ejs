@@ -121,11 +121,185 @@
 			</div>
 		</nav>
 		<!-- /navbar -->
+		<div
+			class="container"
+			style="
+				margin-top: 50px;
+				box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+				background-color: #fff;
+				padding: 20px;
+				border-radius: 10px;
+				color: #333;
+			"
+		>
+			<div class="row mb-3">
+				<form action="/" method="post">
+					<div class="input-group mb-4">
+						<input
+							type="text"
+							class="form-control w-auto"
+							id="wordInput"
+							placeholder="Kelime girin..."
+							name="wordInput"
+						/>
+						<button
+							class="btn"
+							style="background-color: #d147a3; color: #fff"
+							id="submitBtn"
+							type="submit"
+						>
+							<i class="bi bi-check-lg fs-3"></i>
+						</button>
+					</div>
+				</form>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="table-responsive">
+						<table
+							class="table table-bordered"
+							style="border: 2px solid #d147a3"
+						>
+							<thead>
+								<tr>
+									<th style="background-color: #d147a3; color: #fff">
+										English
+									</th>
+									<th style="background-color: #d147a3; color: #fff">
+										Turkish
+									</th>
+									<th style="background-color: #d147a3; color: #fff">Type</th>
+									<th
+										style="
+											background-color: #d147a3;
+											color: #fff;
+											width: 60px;
+											text-align: center;
+										"
+									>
+										Sound
+									</th>
+									<th
+										style="
+											background-color: #d147a3;
+											color: #fff;
+											width: 120px;
+											text-align: center;
+										"
+									>
+										Edit / Delete
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr
+									class="collapse-control"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapseWord1"
+									style="
+										cursor: pointer;
+										transition: background-color 0.3s ease-in-out;
+									"
+								>
+									<td>
+										<a href="#" style="color: black; text-decoration: none"
+											>Hello</a
+										>
+									</td>
+									<td>Merhaba</td>
+									<td>Greeting</td>
+									<td style="text-align: center">
+										<button class="btn btn-light btn-sm">
+											<i class="bi bi-volume-up"></i>
+										</button>
+									</td>
+									<td style="text-align: center">
+										<button class="btn btn-warning btn-sm">
+											<i class="bi bi-pencil"></i>
+										</button>
+										<button class="btn btn-danger btn-sm">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+								<tr>
+									<td
+										colspan="5"
+										class="collapse-td"
+										style="
+											background-color: #fdd0e6;
+											padding: 10px;
+											border-top: 2px solid #d147a3;
+										"
+									>
+										<div class="collapse" id="collapseWord1">
+											<span
+												class="header-6"
+												style="font-weight: bold; color: #d147a3"
+												>Example Sentence:</span
+											>
+											<p>Hello, how are you? - Merhaba, nasılsın?</p>
+										</div>
+									</td>
+								</tr>
 
-		<form action="">
-			<input type="text" name="" id="" />
-			<input type="button" value="" />
-		</form>
+								<tr
+									class="collapse-control"
+									data-bs-toggle="collapse"
+									data-bs-target="#collapseWord2"
+									style="
+										cursor: pointer;
+										transition: background-color 0.3s ease-in-out;
+									"
+								>
+									<td>
+										<a href="#" style="color: black; text-decoration: none"
+											>Hello</a
+										>
+									</td>
+									<td>Merhaba</td>
+									<td>Greeting</td>
+									<td style="text-align: center">
+										<button class="btn btn-light btn-sm">
+											<i class="bi bi-volume-up"></i>
+										</button>
+									</td>
+									<td style="text-align: center">
+										<button class="btn btn-warning btn-sm">
+											<i class="bi bi-pencil"></i>
+										</button>
+										<button class="btn btn-danger btn-sm">
+											<i class="bi bi-trash"></i>
+										</button>
+									</td>
+								</tr>
+								<tr>
+									<td
+										colspan="5"
+										class="collapse-td"
+										style="
+											background-color: #fdd0e6;
+											padding: 10px;
+											border-top: 2px solid #d147a3;
+										"
+									>
+										<div class="collapse" id="collapseWord2">
+											<span
+												class="header-6"
+												style="font-weight: bold; color: #d147a3"
+												>Example Sentence:</span
+											>
+											<p>Hello, how are you? - Merhaba, nasılsın?</p>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Footer -->
 		<footer class="bg-white text-dark py-4">
 			<div class="container text-center">
@@ -150,7 +324,7 @@
 
 				<!-- Footer Text -->
 				<p class="mb-0">
-					&copy; 2024. All Rights Reserved. Built by BootstrapBrain with ♥
+					&copy; 2024. All Rights Reserved. Built by EmreKandazoglu with ♥
 				</p>
 			</div>
 		</footer>
