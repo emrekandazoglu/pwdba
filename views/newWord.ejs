@@ -83,6 +83,7 @@
 			.table th.actions-column {
 				width: 120px;
 				text-align: center;
+				border-left: none; /* Dikey çizgiyi kaldır */
 			}
 
 			.table td.text-center {
@@ -243,12 +244,12 @@
 							<tbody>
 								<% if (words && words.length > 0) { %> <% words.forEach((word,
 								index) => { %>
-								<tr
-									class="collapse-control"
-									data-bs-toggle="collapse"
-									data-bs-target="#collapseWord<%= index %>"
-								>
-									<td>
+								<tr>
+									<td
+										class="collapse-control"
+										data-bs-toggle="collapse"
+										data-bs-target="#collapseWord<%= index %>"
+									>
 										<a href="#" class="word-link"><%= word.english %></a>
 									</td>
 									<td><%= word.turkish %></td>
@@ -268,7 +269,6 @@
 											<i class="bi bi-volume-up fs-4"></i>
 										</button>
 									</td>
-
 									<td class="text-center">
 										<button class="btn btn-warning btn-sm">
 											<i class="bi bi-pencil"></i>
@@ -279,7 +279,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td colspan="5" class="collapse-td">
+									<td colspan="6" class="collapse-td">
 										<div class="collapse" id="collapseWord<%= index %>">
 											<% if (word.Sentences && word.Sentences.length > 0) { %>
 											<span class="example-header">Example Sentences:</span>
