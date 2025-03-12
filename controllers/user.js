@@ -1,41 +1,96 @@
-const { getCommonUsages } = require('../helpers/tureng'); // tureng.js dosyasını dahil et
+const { getCommonUsages } = require('../helpers/tureng');
 const { getFirstExampleSentence } = require('../helpers/turengExample');
-const { getTTS } = require('../helpers/audio'); // audio.js dosyasını dahil et
+const { getTTS } = require('../helpers/audio');
+const { Category, Word, Sentence } = require('../models');
 
-exports.getpage = (req, res) => {
-	res.render('newWord', { title: 'User Page' });
+exports.getAllData = async (req, res) => {
+	try {
+		// Tüm kategorileri çek
+		const categories = await Category.findAll({
+			attributes: ['id', 'category_name'],
+		});
+
+		// Tüm kelimeleri kategorileri ve cümleleriyle birlikte çek
+		const words = await Word.findAll({
+			include: [
+				{
+					model: Category,
+					attributes: ['category_name'],
+				},
+				{
+					model: Sentence,
+					attributes: ['english_sentence', 'turkish_sentence'],
+					separate: true,
+				},
+			],
+		});
+
+		// EJS template'e verileri gönder
+		res.render('newWord', {
+			title: 'User Page',
+			words: words,
+			categories: categories,
+		});
+	} catch (error) {
+		console.error('Error fetching data:', error);
+		res.status(500).send('Veritabanından bilgiler alınırken bir hata oluştu.');
+	}
 };
 
-// exports.postpage = async (req, res) => {
-// 	const word = req.body.wordInput; // Formdan gelen kelimeyi al
+exports.postData = async (req, res) => {
+	try {
+		const { wordInput, category } = req.body;
 
-// 	if (!word) {
-// 		// Kelime girilmediyse hata mesajı
-// 		return res.status(400).send('Kelime girilmelidir!');
-// 	}
+		if (!wordInput || !category) {
+			return res.status(400).json({
+				success: false,
+				message: 'Kelime ve kategori alanları zorunludur',
+			});
+		}
 
-// 	try {
-// 		// Tureng API'sinden kelimenin yaygın kullanımını al
-// 		const result = await getCommonUsages(word);
-// 		// Google TTS API'sinden kelimenin sesli telaffuzunu al
-// 		const ttsBase64 = await getTTS(word); // Ses verisini Base64 formatında al
+		// Kategori ID'sinin geçerli olup olmadığını kontrol et
+		const categoryExists = await Category.findByPk(parseInt(category));
+		if (!categoryExists) {
+			return res.status(400).json({
+				success: false,
+				message: 'Geçersiz kategori ID',
+			});
+		}
 
-// 		// EJS şablonuna yaygın kullanım ve ses verisini gönder
-// 		const sentence = await getFirstExampleSentence(word);
+		// API'lerden verileri al
+		const result = await getCommonUsages(wordInput);
+		const sentenceResult = await getFirstExampleSentence(wordInput);
 
-// 		// Eğer API'den veri gelmezse varsayılan bir değer ata
-// 		const example =
-// 			sentence && sentence.success
-// 				? sentence.example
-// 				: { english: 'Veri bulunamadı', turkish: 'Veri bulunamadı' };
+		const sentence =
+			sentenceResult && sentenceResult.success
+				? sentenceResult.example
+				: { english: 'Veri bulunamadı', turkish: 'Veri bulunamadı' };
 
-// 		res.render('newWord', {
-// 			commonUsages: result,
-// 			example: example, // Doğru değişken ismiyle gönder
-// 			audio: ttsBase64,
-// 		});
-// 	} catch (error) {
-// 		console.error('Hata:', error);
-// 		res.status(500).send('Bir hata oluştu.');
-// 	}
-// };
+		// Veritabanına kelimeyi kaydet
+		const newWord = await Word.create({
+			english: wordInput,
+			turkish: result.data.turkish || 'Çeviri bulunamadı',
+			type: result.data.type || 'Belirsiz',
+			category_id: parseInt(category), // category_id kullanıyoruz
+		});
+
+		// Örnek cümleyi kaydet
+		if (sentence.english !== 'Veri bulunamadı') {
+			await Sentence.create({
+				english_sentence: sentence.english,
+				turkish_sentence: sentence.turkish,
+				word_id: newWord.id, // word_id kullanıyoruz
+			});
+		}
+
+		// Güncel verileri çek
+		res.redirect('yeni-kelime');
+	} catch (error) {
+		console.error('Error in postData:', error);
+		res.status(500).json({
+			success: false,
+			message: 'Kelime eklenirken bir hata oluştu',
+			error: error.message,
+		});
+	}
+};

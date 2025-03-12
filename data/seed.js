@@ -2,11 +2,6 @@ const { sequelize, Category, Word, Sentence } = require('../models');
 
 async function seedDatabase() {
 	try {
-		// **Önce tüm verileri temizle (isteğe bağlı)**
-		await Sentence.destroy({ where: {} });
-		await Word.destroy({ where: {} });
-		await Category.destroy({ where: {} });
-
 		// **Kategorileri ekle**
 		const categories = await Category.bulkCreate([
 			{ category_name: 'Animals' },
@@ -19,24 +14,18 @@ async function seedDatabase() {
 			{
 				english: 'Dog',
 				turkish: 'Köpek',
-				base64:
-					'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk',
 				type: 'noun',
 				category_id: categories[0].id,
 			},
 			{
 				english: 'Computer',
 				turkish: 'Bilgisayar',
-				base64:
-					'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk',
 				type: 'noun',
 				category_id: categories[1].id,
 			},
 			{
 				english: 'Pizza',
 				turkish: 'Pizza',
-				base64:
-					'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABKklEQVR42mNk',
 				type: 'noun',
 				category_id: categories[2].id,
 			},

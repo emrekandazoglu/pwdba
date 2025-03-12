@@ -75,6 +75,6 @@ async function getFirstExampleSentence(word) {
 		await browser.close();
 	}
 }
-getFirstExampleSentence('apple').then(console.log);
+
 // Kullanım
 module.exports = { getFirstExampleSentence };

@@ -64,6 +64,65 @@
 					font-size: 1.1rem; /* İkon boyutunu küçültme */
 				}
 			}
+
+			/* Table Styles */
+			.table {
+				border: 2px solid #d147a3;
+			}
+
+			.table th {
+				background-color: #d147a3;
+				color: #fff;
+			}
+
+			.table th.sound-column {
+				width: 60px;
+				text-align: center;
+			}
+
+			.table th.actions-column {
+				width: 120px;
+				text-align: center;
+			}
+
+			.table td.text-center {
+				text-align: center;
+			}
+
+			.word-link {
+				color: black;
+				text-decoration: none;
+			}
+
+			.collapse-control {
+				cursor: pointer;
+				transition: background-color 0.3s ease-in-out;
+			}
+
+			.collapse-td {
+				background-color: #fdd0e6;
+				padding: 10px;
+				border-top: 2px solid #d147a3;
+			}
+
+			.example-header {
+				font-weight: bold;
+				color: #d147a3;
+			}
+
+			.form-select {
+				border-color: #d147a3;
+			}
+
+			.form-select:focus {
+				border-color: #d147a3;
+				box-shadow: 0 0 0 0.25rem rgba(209, 71, 163, 0.25);
+			}
+
+			.table th:nth-child(4) {
+				/* Category column */
+				width: 120px;
+			}
 		</style>
 	</head>
 
@@ -133,15 +192,29 @@
 			"
 		>
 			<div class="row mb-3">
-				<form action="/" method="post">
+				<form action="yeni-kelime" method="post">
 					<div class="input-group mb-4">
 						<input
 							type="text"
-							class="form-control w-auto"
+							class="form-control"
 							id="wordInput"
 							placeholder="Kelime girin..."
 							name="wordInput"
 						/>
+						<select
+							class="form-select"
+							name="category"
+							id="category"
+							style="max-width: 200px"
+						>
+							<option value="" selected>Kategori Seçin</option>
+							<% if (categories && categories.length > 0) { %> <%
+							categories.forEach(category => { %>
+							<option value="<%= category.id %>">
+								<%= category.category_name %>
+							</option>
+							<% }); %> <% } %>
+						</select>
 						<button
 							class="btn"
 							style="background-color: #d147a3; color: #fff"
@@ -156,115 +229,47 @@
 			<div class="row">
 				<div class="col-md-12">
 					<div class="table-responsive">
-						<table
-							class="table table-bordered"
-							style="border: 2px solid #d147a3"
-						>
+						<table class="table table-bordered">
 							<thead>
 								<tr>
-									<th style="background-color: #d147a3; color: #fff">
-										English
-									</th>
-									<th style="background-color: #d147a3; color: #fff">
-										Turkish
-									</th>
-									<th style="background-color: #d147a3; color: #fff">Type</th>
-									<th
-										style="
-											background-color: #d147a3;
-											color: #fff;
-											width: 60px;
-											text-align: center;
-										"
-									>
-										Sound
-									</th>
-									<th
-										style="
-											background-color: #d147a3;
-											color: #fff;
-											width: 120px;
-											text-align: center;
-										"
-									>
-										Edit / Delete
-									</th>
+									<th>English</th>
+									<th>Turkish</th>
+									<th>Type</th>
+									<th>Category</th>
+									<th class="sound-column">Sound</th>
+									<th class="actions-column">Edit / Delete</th>
 								</tr>
 							</thead>
 							<tbody>
+								<% if (words && words.length > 0) { %> <% words.forEach((word,
+								index) => { %>
 								<tr
 									class="collapse-control"
 									data-bs-toggle="collapse"
-									data-bs-target="#collapseWord1"
-									style="
-										cursor: pointer;
-										transition: background-color 0.3s ease-in-out;
-									"
+									data-bs-target="#collapseWord<%= index %>"
 								>
 									<td>
-										<a href="#" style="color: black; text-decoration: none"
-											>Hello</a
+										<a href="#" class="word-link"><%= word.english %></a>
+									</td>
+									<td><%= word.turkish %></td>
+									<td><%= word.type %></td>
+									<td>
+										<% if (word.Category && word.Category.category_name) { %>
+										<%= word.Category.category_name %> <% } else { %>
+										<span class="text-muted">Kategori Seçilmedi</span>
+										<% } %>
+									</td>
+									<td class="text-center">
+										<!-- Sesli telaffuz butonu -->
+										<button
+											class="btn btn-outline-dark btn-sm"
+											onclick="playAudio('<%= word.english %>')"
 										>
-									</td>
-									<td>Merhaba</td>
-									<td>Greeting</td>
-									<td style="text-align: center">
-										<button class="btn btn-light btn-sm">
-											<i class="bi bi-volume-up"></i>
+											<i class="bi bi-volume-up fs-4"></i>
 										</button>
 									</td>
-									<td style="text-align: center">
-										<button class="btn btn-warning btn-sm">
-											<i class="bi bi-pencil"></i>
-										</button>
-										<button class="btn btn-danger btn-sm">
-											<i class="bi bi-trash"></i>
-										</button>
-									</td>
-								</tr>
-								<tr>
-									<td
-										colspan="5"
-										class="collapse-td"
-										style="
-											background-color: #fdd0e6;
-											padding: 10px;
-											border-top: 2px solid #d147a3;
-										"
-									>
-										<div class="collapse" id="collapseWord1">
-											<span
-												class="header-6"
-												style="font-weight: bold; color: #d147a3"
-												>Example Sentence:</span
-											>
-											<p>Hello, how are you? - Merhaba, nasılsın?</p>
-										</div>
-									</td>
-								</tr>
 
-								<tr
-									class="collapse-control"
-									data-bs-toggle="collapse"
-									data-bs-target="#collapseWord2"
-									style="
-										cursor: pointer;
-										transition: background-color 0.3s ease-in-out;
-									"
-								>
-									<td>
-										<a href="#" style="color: black; text-decoration: none"
-											>Hello</a
-										>
-									</td>
-									<td>Merhaba</td>
-									<td>Greeting</td>
-									<td style="text-align: center">
-										<button class="btn btn-light btn-sm">
-											<i class="bi bi-volume-up"></i>
-										</button>
-									</td>
-									<td style="text-align: center">
+									<td class="text-center">
 										<button class="btn btn-warning btn-sm">
 											<i class="bi bi-pencil"></i>
 										</button>
@@ -274,25 +279,28 @@
 									</td>
 								</tr>
 								<tr>
-									<td
-										colspan="5"
-										class="collapse-td"
-										style="
-											background-color: #fdd0e6;
-											padding: 10px;
-											border-top: 2px solid #d147a3;
-										"
-									>
-										<div class="collapse" id="collapseWord2">
-											<span
-												class="header-6"
-												style="font-weight: bold; color: #d147a3"
-												>Example Sentence:</span
-											>
-											<p>Hello, how are you? - Merhaba, nasılsın?</p>
+									<td colspan="5" class="collapse-td">
+										<div class="collapse" id="collapseWord<%= index %>">
+											<% if (word.Sentences && word.Sentences.length > 0) { %>
+											<span class="example-header">Example Sentences:</span>
+											<% word.Sentences.forEach((sentence, sIndex) => { %>
+											<p>
+												<%= sentence.english_sentence %> - <%=
+												sentence.turkish_sentence %>
+											</p>
+											<% }); %> <% } else { %>
+											<p>No example sentences available.</p>
+											<% } %>
 										</div>
 									</td>
 								</tr>
+								<% }); %> <% } else { %>
+								<tr>
+									<td colspan="5" class="text-center">
+										No words found in database.
+									</td>
+								</tr>
+								<% } %>
 							</tbody>
 						</table>
 					</div>
@@ -332,9 +340,36 @@
 		<!-- Footer -->
 
 		<script>
-			function playAudio() {
-				const audioElement = document.querySelector('audio');
-				audioElement.play();
+			function playAudio(word) {
+				try {
+					// Kelimenin telaffuzunu seslendirecek bir nesne oluşturuyoruz
+					const utterance = new SpeechSynthesisUtterance(word);
+
+					// Ses seçeneklerini alıyoruz
+					const voices = speechSynthesis.getVoices();
+
+					// Kadın sesini seçiyoruz
+					const femaleVoice = voices.find(voice =>
+						voice.name.toLowerCase().includes('female')
+					);
+
+					// Kadın sesini seçersek, ses olarak belirliyoruz
+					if (femaleVoice) {
+						utterance.voice = femaleVoice;
+					}
+
+					// Dil ayarlarını yapıyoruz (örneğin, İngilizce)
+					utterance.lang = 'en-GB'; // İngilizce İngiltere
+
+					// Sesin hızını ve tonlamasını ayarlıyoruz
+					utterance.rate = 1; // Hız
+					utterance.pitch = 1; // Tonlama
+
+					// Metni seslendiriyoruz
+					speechSynthesis.speak(utterance);
+				} catch (error) {
+					console.error('Ses çalma hatası:', error);
+				}
 			}
 		</script>
 

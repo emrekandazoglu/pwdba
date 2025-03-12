@@ -11,10 +11,6 @@ const Word = sequelize.define('Word', {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
-	base64: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
 	type: {
 		type: DataTypes.STRING,
 		allowNull: false,
