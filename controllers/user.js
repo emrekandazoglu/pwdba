@@ -94,3 +94,45 @@ exports.postData = async (req, res) => {
 		});
 	}
 };
+
+exports.postCategory = async (req,res)=>{
+	try {
+		const {categoryInput} = req.body;
+		if(!categoryInput){
+			return res.status(400).json({
+				success: false,
+				message: 'Kategori adı boş olamaz'
+			});
+		}
+
+		const newCategory = await Category.create({
+			category_name: categoryInput
+		});
+
+		res.redirect('kategori-ekle');
+	} catch (error) {
+		console.error('Error in postCategory:', error);
+		res.status(500).json({
+			success: false,
+			message: 'Kategori eklenirken bir hata oluştu',
+			error: error.message
+		});
+	}
+}
+
+exports.getCategories = async (req,res)=>{
+
+	try {
+		const categories = await Category.findAll({
+			attributes: ['id', 'category_name'],
+		});
+
+		res.render('createCategory', {
+			title: 'User Page',
+			categories: categories
+		});
+	} catch (error) {
+		console.error('Error fetching categories:', error);
+		res.status(500).send('Kategoriler alınırken bir hata oluştu');
+	}
+}
