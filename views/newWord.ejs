@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Anasayfa</title>
-
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title><%= title %></title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+		/>
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/gh/livecanvas-team/ninjabootstrap/dist/css/bootstrap.min.css"
@@ -20,7 +23,6 @@
 			href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
 			rel="stylesheet"
 		/>
-
 		<style>
 			/* Yazı tipi olarak Sour Gummy'i kullan */
 			body {
@@ -126,60 +128,9 @@
 			}
 		</style>
 	</head>
-
 	<body>
 		<!-- Navbar -->
-		<nav class="navbar navbar-expand-lg navbar-light py-4">
-			<div class="container-fluid">
-				<!-- Logo yerine site adı -->
-				<a class="navbar-brand" href="#">
-					<span style="font-size: 44px; font-weight: bold; color: black"
-						>WordMasterDB</span
-					>
-				</a>
-				<button
-					class="navbar-toggler"
-					type="button"
-					data-bs-toggle="collapse"
-					data-bs-target="#nav_lc"
-					aria-controls="nav_lc"
-					aria-expanded="false"
-					aria-label="Toggle navigation"
-				>
-					<span class="navbar-toggler-icon"></span>
-				</button>
-				<div class="collapse navbar-collapse" id="nav_lc">
-					<ul
-						class="d-none d-lg-flex navbar-nav mx-auto my-3 my-lg-0 position-absolute top-50 start-50 translate-middle"
-					>
-						<li class="nav-item me-4">
-							<a class="nav-link" href="#">Kelimelerim</a>
-						</li>
-						<li class="nav-item me-4">
-							<a class="nav-link" href="#">Hızlı Ekle</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Kendin Ekle</a>
-						</li>
-					</ul>
-					<ul class="navbar-nav my-3 my-lg-0 d-lg-none">
-						<li class="nav-item me-4">
-							<a class="nav-link" href="#">About</a>
-						</li>
-						<li class="nav-item me-4">
-							<a class="nav-link" href="#">Services</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Testimonials</a>
-						</li>
-					</ul>
-					<div class="ms-lg-auto">
-						<a class="btn btn-outline-dark me-2" href="#">Sign In</a>
-						<a class="btn btn-warning" href="#">Sign Up</a>
-					</div>
-				</div>
-			</div>
-		</nav>
+		<%- include('./partials/navbar.ejs') %>
 		<!-- /navbar -->
 		<div
 			class="container"
@@ -204,12 +155,14 @@
 							id="wordInput"
 							placeholder="Kelime girin..."
 							name="wordInput"
+							required
 						/>
 						<select
 							class="form-select"
 							name="category"
 							id="category"
 							style="max-width: 200px"
+							required
 						>
 							<option value="" selected>Kategori Seçin</option>
 							<% if (categories && categories.length > 0) { %> <%
@@ -276,7 +229,10 @@
 										<button class="btn btn-warning btn-sm">
 											<i class="bi bi-pencil"></i>
 										</button>
-										<button class="btn btn-danger btn-sm">
+										<button
+											class="btn btn-danger btn-sm"
+											onclick="confirmDelete('<%= word.id %>')"
+										>
 											<i class="bi bi-trash"></i>
 										</button>
 									</td>
@@ -312,38 +268,12 @@
 		</div>
 
 		<!-- Footer -->
-		<footer class="bg-white text-dark py-4">
-			<div class="container text-center">
-				<!-- Site Name -->
-				<h4 class="fw-bold mb-3">WordMasterDB</h4>
-
-				<!-- Social Media Icons -->
-				<div class="mb-3">
-					<a href="#" class="text-dark mx-2">
-						<i class="bi bi-facebook"></i>
-					</a>
-					<a href="#" class="text-dark mx-2">
-						<i class="bi bi-youtube"></i>
-					</a>
-					<a href="#" class="text-dark mx-2">
-						<i class="bi bi-twitter"></i>
-					</a>
-					<a href="#" class="text-dark mx-2">
-						<i class="bi bi-instagram"></i>
-					</a>
-				</div>
-
-				<!-- Footer Text -->
-				<p class="mb-0">
-					&copy; 2024. All Rights Reserved. Built by EmreKandazoglu with ♥
-				</p>
-			</div>
-		</footer>
-
+		<%- include('./partials/footer.ejs') %>
 		<!-- Footer -->
 
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<script>
-			function playAudio(word) {
+				function playAudio(word) {
 				try {
 					// Kelimenin telaffuzunu seslendirecek bir nesne oluşturuyoruz
 					const utterance = new SpeechSynthesisUtterance(word);
@@ -373,6 +303,33 @@
 				} catch (error) {
 					console.error('Ses çalma hatası:', error);
 				}
+			}
+
+					// Hata mesajlarını göstermek için
+					<% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+						Swal.fire({
+							icon: 'error',
+							title: 'Hata',
+							text: '<%= errorMessage %>',
+						});
+					<% } %>
+
+
+							 async function confirmDelete(wordId) {
+			    const result = await Swal.fire({
+			        title: 'Emin misiniz?',
+			        text: "Bu kelimeyi silmek istediğinizden emin misiniz?",
+			        icon: 'warning',
+			        showCancelButton: true,
+			        confirmButtonColor: '#d147a3',
+			        cancelButtonColor: '#6c757d',
+			        confirmButtonText: 'Evet, sil',
+			        cancelButtonText: 'İptal'
+			    });
+
+			    if (result.isConfirmed) {
+			        window.location.href = `/user/delete-word/${wordId}`;
+			    }
 			}
 		</script>
 
