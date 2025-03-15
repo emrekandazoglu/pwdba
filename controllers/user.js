@@ -3,7 +3,7 @@ const { getFirstExampleSentence } = require('../helpers/turengExample');
 const { getTTS } = require('../helpers/audio');
 const { Category, Word, Sentence } = require('../models');
 
-exports.getAllData = async (req, res) => {
+exports.getAllData = async(req, res) => {
     try {
         // Tüm kategorileri çek
         const categories = await Category.findAll({
@@ -12,8 +12,7 @@ exports.getAllData = async (req, res) => {
 
         // Tüm kelimeleri kategorileri ve cümleleriyle birlikte çek
         const words = await Word.findAll({
-            include: [
-                {
+            include: [{
                     model: Category,
                     attributes: ['category_name'],
                 },
@@ -42,7 +41,7 @@ exports.getAllData = async (req, res) => {
     }
 };
 
-exports.postData = async (req, res) => {
+exports.postData = async(req, res) => {
     try {
         const { wordInput, category } = req.body;
 
@@ -93,9 +92,9 @@ exports.postData = async (req, res) => {
         const sentenceResult = await getFirstExampleSentence(wordInput);
 
         const sentence =
-            sentenceResult && sentenceResult.success
-                ? sentenceResult.example
-                : { english: 'Veri bulunamadı', turkish: 'Veri bulunamadı' };
+            sentenceResult && sentenceResult.success ?
+            sentenceResult.example :
+            { english: 'Veri bulunamadı', turkish: 'Veri bulunamadı' };
 
         // Veritabanına kelimeyi kaydet
         const newWord = await Word.create({
@@ -138,7 +137,7 @@ exports.postData = async (req, res) => {
     }
 };
 
-exports.deleteWord = async (req, res) => {
+exports.deleteWord = async(req, res) => {
     try {
         const { id } = req.params;
 
@@ -159,7 +158,7 @@ exports.deleteWord = async (req, res) => {
                 categories: await Category.findAll({
                     attributes: ['id', 'category_name'],
                 }),
-                errorMessage: 'Kelime bulunamadı'
+                errorMessage: 'Kelime bulunamadı',
             });
         }
 
@@ -184,11 +183,109 @@ exports.deleteWord = async (req, res) => {
             categories: await Category.findAll({
                 attributes: ['id', 'category_name'],
             }),
-            errorMessage: 'Kelime silinirken bir hata oluştu'
+            errorMessage: 'Kelime silinirken bir hata oluştu',
         });
     }
 };
-exports.postCategory = async (req, res) => {
+
+exports.getUpdateWord = async(req, res) => {
+    try {
+        const { id } = req.params;
+
+        const word = await Word.findOne({
+            where: { id },
+            include: [
+                { model: Category, attributes: ['category_name'] },
+                {
+                    model: Sentence,
+                    attributes: ['id', 'english_sentence', 'turkish_sentence'],
+                },
+            ],
+        });
+
+        if (!word) {
+            return res.status(404).redirect('/user/yeni-kelime');
+        }
+
+        const categories = await Category.findAll({
+            attributes: ['id', 'category_name'],
+        });
+
+        res.render('updateWord', {
+            title: 'Kelime Düzenle',
+            word,
+            categories,
+        });
+    } catch (error) {
+        console.error('Error in getUpdateWord:', error);
+        res.status(500).redirect('/user/yeni-kelime');
+    }
+};
+
+exports.updateWord = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const { english, turkish, type, category, sentences, deletedSentences } =
+        req.body;
+
+        // Update word
+        await Word.update({
+            english,
+            turkish,
+            type,
+            category_id: category,
+        }, {
+            where: { id },
+        });
+
+        // Handle deleted sentences
+        if (deletedSentences) {
+            const deletedIds = Array.isArray(deletedSentences) ?
+                deletedSentences :
+                [deletedSentences];
+            await Sentence.destroy({
+                where: {
+                    id: deletedIds,
+                    word_id: id,
+                },
+            });
+        }
+
+        // Handle sentences
+        if (sentences && Array.isArray(sentences)) {
+            for (const sentence of sentences) {
+                if (sentence.id) {
+                    // Update existing sentence
+                    await Sentence.update({
+                        english_sentence: sentence.english,
+                        turkish_sentence: sentence.turkish,
+                    }, {
+                        where: {
+                            id: sentence.id,
+                            word_id: id,
+                        },
+                    });
+                } else if (sentence.english && sentence.turkish) {
+                    // Create new sentence
+                    await Sentence.create({
+                        english_sentence: sentence.english,
+                        turkish_sentence: sentence.turkish,
+                        word_id: id,
+                    });
+                }
+            }
+        }
+
+        res.redirect('/user/yeni-kelime');
+    } catch (error) {
+        console.error('Error in updateWord:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Kelime güncellenirken bir hata oluştu',
+        });
+    }
+};
+exports.postCategory = async(req, res) => {
     try {
         const { categoryInput } = req.body;
         if (!categoryInput) {
@@ -213,7 +310,7 @@ exports.postCategory = async (req, res) => {
     }
 };
 
-exports.getCategories = async (req, res) => {
+exports.getCategories = async(req, res) => {
     try {
         const categories = await Category.findAll({
             attributes: ['id', 'category_name'],
