@@ -89,24 +89,24 @@ exports.postData = async (req, res) => {
 		console.error('Error in postData:', error);
 		res.status(500).json({
 			success: false,
-			message: 'Kelime eklenirken bir hata oluştu',
+			message: 'Hatalı kelime girildi',
 			error: error.message,
 		});
 	}
 };
 
-exports.postCategory = async (req,res)=>{
+exports.postCategory = async (req, res) => {
 	try {
-		const {categoryInput} = req.body;
-		if(!categoryInput){
+		const { categoryInput } = req.body;
+		if (!categoryInput) {
 			return res.status(400).json({
 				success: false,
-				message: 'Kategori adı boş olamaz'
+				message: 'Kategori adı boş olamaz',
 			});
 		}
 
 		const newCategory = await Category.create({
-			category_name: categoryInput
+			category_name: categoryInput,
 		});
 
 		res.redirect('kategori-ekle');
@@ -115,13 +115,12 @@ exports.postCategory = async (req,res)=>{
 		res.status(500).json({
 			success: false,
 			message: 'Kategori eklenirken bir hata oluştu',
-			error: error.message
+			error: error.message,
 		});
 	}
-}
+};
 
-exports.getCategories = async (req,res)=>{
-
+exports.getCategories = async (req, res) => {
 	try {
 		const categories = await Category.findAll({
 			attributes: ['id', 'category_name'],
@@ -129,10 +128,10 @@ exports.getCategories = async (req,res)=>{
 
 		res.render('createCategory', {
 			title: 'User Page',
-			categories: categories
+			categories: categories,
 		});
 	} catch (error) {
 		console.error('Error fetching categories:', error);
 		res.status(500).send('Kategoriler alınırken bir hata oluştu');
 	}
-}
+};
