@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+		/>
+		<title><%= title %></title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
+		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/livecanvas-team/ninjabootstrap/dist/css/bootstrap.min.css"
+			media="all"
+		/>
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+			rel="stylesheet"
+		/>
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
+			rel="stylesheet"
+		/>
+		<style>
+			/* Yazı tipi olarak Sour Gummy'i kullan */
+
+			body {
+				font-family: 'Sour Gummy', cursive, sans-serif;
+			}
+
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				font-family: 'Sour Gummy', cursive, sans-serif;
+			}
+
+			@keyframes bounce {
+				0% {
+					transform: translateY(0);
+				}
+				50% {
+					transform: translateY(-10px);
+				}
+				100% {
+					transform: translateY(0);
+				}
+			}
+			/* Küçük ekranlarda yazı ve butonları küçültme */
+
+			@media (max-width: 576px) {
+				.table th,
+				.table td {
+					font-size: 0.5rem;
+					/* Yazı boyutunu küçültme */
+					padding: 0.4rem;
+					/* Hücre içi padding küçültme */
+				}
+				.table button {
+					font-size: 0.7rem;
+					/* Buton boyutunu küçültme */
+				}
+				.bi-volume-up {
+					font-size: 0.6rem;
+					/* İkon boyutunu küçültme */
+				}
+			}
+			/* Table Styles */
+
+			.table {
+				border: 2px solid #d147a3;
+			}
+
+			.table th {
+				background-color: #d147a3;
+				color: #fff;
+			}
+
+			.table th.sound-column {
+				width: 60px;
+				text-align: center;
+			}
+
+			.table th.actions-column {
+				width: 120px;
+				text-align: center;
+				border-left: none;
+				/* Dikey çizgiyi kaldır */
+			}
+
+			.table td.text-center {
+				text-align: center;
+			}
+
+			.word-link {
+				color: black;
+				text-decoration: none;
+			}
+
+			.collapse-control {
+				cursor: pointer;
+				transition: background-color 0.3s ease-in-out;
+			}
+
+			.collapse-td {
+				background-color: #fdd0e6;
+				padding: 10px;
+				border-top: 2px solid #d147a3;
+			}
+
+			.example-header {
+				font-weight: bold;
+				color: #d147a3;
+			}
+
+			.form-select {
+				border-color: #d147a3;
+			}
+
+			.form-select:focus {
+				border-color: #d147a3;
+				box-shadow: 0 0 0 0.25rem rgba(209, 71, 163, 0.25);
+			}
+
+			.table th:nth-child(4) {
+				/* Category column */
+				width: 120px;
+			}
+			/* Responsive styles for the form */
+
+			@media (max-width: 768px) {
+				.container {
+					padding: 10px !important;
+					margin: 10px !important;
+					width: calc(100% - 20px) !important;
+					max-width: none !important;
+				}
+				.row {
+					margin-left: 0 !important;
+					margin-right: 0 !important;
+				}
+				.col-md-4,
+				.col-md-2,
+				.col-md-5 {
+					width: 100% !important;
+					padding: 5px !important;
+					margin-bottom: 10px !important;
+				}
+				.sentence-group {
+					margin: 0 0 15px 0 !important;
+					padding: 0 !important;
+				}
+				.sentence-group .row {
+					display: flex;
+					flex-direction: column;
+				}
+				.sentence-group .col-md-5,
+				.sentence-group .col-md-2 {
+					width: 100% !important;
+					padding: 5px 0 !important;
+				}
+				.btn {
+					width: 100%;
+					margin: 5px 0 !important;
+					padding: 8px !important;
+				}
+				.form-control,
+				.form-select {
+					width: 100% !important;
+				}
+				h1 {
+					font-size: 1.5rem !important;
+					margin: 10px 0 !important;
+				}
+				h4 {
+					font-size: 1.2rem !important;
+					display: flex;
+					flex-direction: column;
+					align-items: start;
+					gap: 10px;
+				}
+				h4 button {
+					width: 100%;
+				}
+				.d-md-flex {
+					flex-direction: column !important;
+				}
+				.me-md-2 {
+					margin-right: 0 !important;
+				}
+			}
+			/* Additional styles for very small devices */
+
+			@media (max-width: 360px) {
+				h1 {
+					font-size: 1.2rem;
+				}
+				.form-label {
+					font-size: 0.8rem;
+				}
+				.btn {
+					font-size: 0.8rem;
+				}
+			}
+			/* Extra small devices */
+
+			@media (max-width: 576px) {
+				.container {
+					padding: 5px !important;
+					margin: 5px !important;
+				}
+				h1 {
+					font-size: 1.2rem !important;
+				}
+				.btn {
+					font-size: 0.875rem !important;
+				}
+				.form-control,
+				.form-select {
+					font-size: 0.875rem !important;
+				}
+			}
+		</style>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	</head>
+
+	<body>
+		<%- include('./partials/navbar.ejs') %>
+		<div
+			class="container"
+			style="
+				margin-top: 50px;
+				box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2);
+				background-color: #fff;
+				padding: 20px;
+				border-radius: 10px;
+				color: #333;
+			"
+		>
+			<div class="row my-3 text-center">
+				<h1>YENİ KELİME EKLE</h1>
+			</div>
+
+			<% if (errorMessage) { %>
+			<div class="alert alert-danger" role="alert"><%= errorMessage %></div>
+			<% } %>
+
+			<div class="container" style="margin-top: 50px; box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2); background-color: #fff; padding: 20px; border-radius: 10px; color: #333;">
+            <div class="row my-3 text-center">
+                <h1>YENİ KELİME EKLE</h1>
+            </div>
+
+            <% if (errorMessage) { %>
+            <div class="alert alert-danger" role="alert"><%= errorMessage %></div>
+            <% } %>
+
+            <div class="row mb-3">
+                <form action="/user/custom-yeni-kelime" method="post"> <!-- action düzeltildi -->
+                    <!-- Kelime Bilgileri -->
+                    <div class="mb-4">
+                        <h4 class="mb-3">Kelime Bilgileri</h4>
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="english" class="form-label">İngilizce</label>
+                                <input type="text" class="form-control" id="english" name="english" required />
+                            </div>
+                            <div class="col-md-4">
+                                <label for="turkish" class="form-label">Türkçe</label>
+                                <input type="text" class="form-control" id="turkish" name="turkish" required />
+                            </div>
+                            <div class="col-md-2">
+                                <label for="type" class="form-label">Tip (Opsiyonel)</label>
+                                <input type="text" class="form-control" id="type" name="type" placeholder="Belirtilmedi" />
+                            </div>
+                            <div class="col-md-2">
+                                <label for="category" class="form-label">Kategori</label>
+                                <select class="form-select" name="category" id="category" required>
+                                    <option value="" disabled selected>Kategori Seç</option>
+                                    <% categories.forEach(category => { %>
+                                    <option value="<%= category.id %>"><%= category.category_name %></option>
+                                    <% }); %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Örnek Cümleler -->
+                    <div class="mb-4">
+                        <h4 class="mb-3">
+                            Örnek Cümleler (Opsiyonel)
+                            <button type="button" class="btn btn-sm btn-outline-success ms-2" onclick="addSentence()">
+                                <i class="bi bi-plus-lg"></i> Yeni Cümle Ekle
+                            </button>
+                        </h4>
+
+                        <div id="sentences-container">
+                            <!-- İlk cümle alanı boş olarak başlasın -->
+                        </div>
+                    </div>
+
+                    <!-- Kaydet Butonu -->
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-secondary me-md-2" onclick="window.location.href='/user/yeni-kelime'">İptal</button>
+                        <button type="submit" class="btn btn-primary" style="background-color: #d147a3; border-color: #d147a3">Kaydet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+		<%- include('./partials/footer.ejs') %>
+<script>
+            function addSentence() {
+                const container = document.getElementById('sentences-container');
+                const sentenceCount = container.getElementsByClassName('sentence-group').length;
+
+                const newSentence = `
+                    <div class="row g-3 mb-3 sentence-group">
+                        <div class="col-md-5">
+                            <label class="form-label">İngilizce Cümle</label>
+                            <input type="text" class="form-control" name="sentences[${sentenceCount}][english]" placeholder="Belirtilmedi" />
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">Türkçe Cümle</label>
+                            <input type="text" class="form-control" name="sentences[${sentenceCount}][turkish]" placeholder="Belirtilmedi" />
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="button" class="btn btn-danger" onclick="removeSentence(this)">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                container.insertAdjacentHTML('beforeend', newSentence);
+            }
+
+            function removeSentence(button) {
+                const sentenceGroup = button.closest('.sentence-group');
+                Swal.fire({
+                    title: 'Emin misiniz?',
+                    text: 'Bu örnek cümleyi silmek istediğinizden emin misiniz?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d147a3',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Evet, sil',
+                    cancelButtonText: 'İptal',
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        sentenceGroup.remove();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: 'Cümle başarıyla silindi.',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    }
+                });
+            }
+
+            // Sayfa yüklendiğinde bir cümle alanı ekle
+            window.onload = function() {
+                addSentence();
+            };
+        </script>
+
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+			integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+			crossorigin="anonymous"
+		></script>
+		<script
+			defer
+			src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"
+			onload="const lightbox = GLightbox({});"
+		></script>
+		<!-- lazily load the gLightbox CSS file -->
+		<link
+			rel="preload"
+			href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+			as="style"
+			onload="this.onload=null;this.rel='stylesheet'"
+		/>
+	</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/livecanvas-team/ninjabootstrap/dist/css/bootstrap.min.css" media="all" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Sour Gummy', cursive, sans-serif;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .flashcard-front {
+            background-color: #6b48ff;
+            color: white;
+        }
+
+        .flashcard-back {
+            background-color: #f1f3ff;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+
+        .flashcard h3 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .flashcard p {
+            font-size: 1.2rem;
+        }
+
+        .btn-flip {
+            background-color: #ffd43b;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-next {
+            background-color: #6b48ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-section h5 {
+            margin-bottom: 10px;
+            color: #6b48ff;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select {
+            max-width: 250px;
+            border-color: #6b48ff;
+            padding: 8px;
+        }
+
+        @media (max-width: 576px) {
+            .flashcard {
+                height: 250px;
+            }
+            .flashcard h3 {
+                font-size: 1.5rem;
+            }
+            .flashcard p {
+                font-size: 1rem;
+            }
+            .filter-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .filter-group select {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <%- include('./partials/navbar.ejs') %>
+
+    <div class="quiz-container">
+        <div class="row my-3 text-center">
+            <h1>KELİME QUIZ</h1>
+        </div>
+
+        <!-- Filtreleme Alanı -->
+        <div class="filter-section">
+            <h5>Kategoriye Göre Filtrele</h5>
+            <div class="filter-group">
+                <select class="form-select" onchange="applyFilter(this.value)">
+                    <option value="">Rastgele (Tüm Kategoriler)</option>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.id %>" <%= selectedCategory == category.id ? 'selected' : '' %>>
+                            <%= category.category_name %>
+                        </option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+
+        <!-- Flashcard Alanı -->
+        <div id="flashcard-container">
+            <% if (words && words.length > 0) { %>
+                <div class="flashcard" id="current-card">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <h3><%= words[0].english %></h3>
+                            <button class="btn-flip" onclick="flipCard()">Cevabı Gör</button>
+                        </div>
+                        <div class="flashcard-back">
+                            <h3><%= words[0].turkish %></h3>
+                            <% if (words[0].Sentences && words[0].Sentences.length > 0) { %>
+                                <p><%= words[0].Sentences[0].english_sentence %> - <%= words[0].Sentences[0].turkish_sentence %></p>
+                            <% } %>
+                            <button class="btn-next" onclick="nextCard()">Sonraki Kelime</button>
+                        </div>
+                    </div>
+                </div>
+            <% } else { %>
+                <p class="text-center">Kelime bulunamadı.</p>
+            <% } %>
+        </div>
+
+        <!-- Quiz Kontrolleri -->
+        <div class="text-center">
+            <button class="btn-next" onclick="restartQuiz()" style="margin-top: 20px;">Quiz'i Yeniden Başlat</button>
+        </div>
+    </div>
+
+    <%- include('./partials/footer.ejs') %>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const words = <%- JSON.stringify(words) %>; // Kelimeleri JS'e aktar
+        let currentIndex = 0;
+
+        function flipCard() {
+            const card = document.getElementById('current-card');
+            card.classList.toggle('flipped');
+        }
+
+        function nextCard() {
+            currentIndex++;
+            if (currentIndex >= words.length) {
+                Swal.fire({
+                    title: 'Quiz Bitti!',
+                    text: 'Tüm kelimeleri tamamladınız. Yeniden başlamak ister misiniz?',
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'Evet',
+                    cancelButtonText: 'Hayır',
+                    confirmButtonColor: '#6b48ff',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        restartQuiz();
+                    }
+                });
+                return;
+            }
+
+            const card = document.getElementById('current-card');
+            card.classList.remove('flipped');
+            card.querySelector('.flashcard-front h3').textContent = words[currentIndex].english;
+            card.querySelector('.flashcard-back h3').textContent = words[currentIndex].turkish;
+            const backContent = card.querySelector('.flashcard-back p');
+            if (words[currentIndex].Sentences && words[currentIndex].Sentences.length > 0) {
+                backContent.textContent = `${words[currentIndex].Sentences[0].english_sentence} - ${words[currentIndex].Sentences[0].turkish_sentence}`;
+            } else {
+                backContent.textContent = '';
+            }
+        }
+
+        function restartQuiz() {
+            currentIndex = 0;
+            const card = document.getElementById('current-card');
+            card.classList.remove('flipped');
+            card.querySelector('.flashcard-front h3').textContent = words[0].english;
+            card.querySelector('.flashcard-back h3').textContent = words[0].turkish;
+            const backContent = card.querySelector('.flashcard-back p');
+            if (words[0].Sentences && words[0].Sentences.length > 0) {
+                backContent.textContent = `${words[0].Sentences[0].english_sentence} - ${words[0].Sentences[0].turkish_sentence}`;
+            } else {
+                backContent.textContent = '';
+            }
+        }
+
+        function applyFilter(categoryId) {
+            const url = new URL(window.location);
+            if (categoryId) {
+                url.searchParams.set('category', categoryId);
+            } else {
+                url.searchParams.delete('category');
+            }
+            window.location.href = url.toString();
+        }
+
+        // Hata mesajı kontrolü
+        <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+            Swal.fire({
+                icon: 'error',
+                title: 'Hata',
+                text: '<%= errorMessage %>',
+            });
+        <% } %>
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
