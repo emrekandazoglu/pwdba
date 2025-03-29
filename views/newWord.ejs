@@ -208,7 +208,7 @@
                 <h1>YENİ KELİME EKLEME</h1>
             </div>
             <div class="row mb-3">
-                <form action="yeni-kelime" method="post">
+                <form action="yeni-kelime" method="post" id="wordForm">
                     <div class="input-group mb-4">
                         <input type="text" class="form-control" id="wordInput" placeholder="Kelime girin..." name="wordInput" required />
                         <select class="form-select" name="category" id="category" style="max-width: 200px" required>
@@ -223,6 +223,7 @@
                         <button class="btn" style="background-color: #d147a3; color: #fff" id="submitBtn" type="submit">
 							<i class="bi bi-check-lg fs-3"></i>
 						</button>
+                       
                     </div>
                 </form>
             </div>
@@ -454,6 +455,23 @@
                         closeYouglishModal();
                     }
                 }
+
+                // Submit işlemini kontrol eden kod
+                document.getElementById('wordForm').addEventListener('submit', function(e) {
+                    const submitBtn = document.getElementById('submitBtn');
+                    
+                    // Form gönderildiğinde butonu devre dışı bırak
+                    submitBtn.disabled = true;
+                    
+                    // Butonun görünümünü güncelle
+                    submitBtn.innerHTML = '<i class="bi bi-hourglass-split fs-3"></i>';
+                    
+                    // 3 saniye sonra butonu tekrar aktif et (başarısız istek durumu için)
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = '<i class="bi bi-check-lg fs-3"></i>';
+                    }, 3000);
+                });
             </script>
 
             <!-- Keep your existing Bootstrap and other scripts -->

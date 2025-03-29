@@ -6,6 +6,7 @@ async function syncDatabase() {
 	try {
 		await sequelize.sync({ force: false }); // Tabloları oluştur veya güncelle
 		console.log('✅ Database synchronized successfully.');
+	
 
 		// Veritabanına örnek verileri ekle
 	} catch (error) {
